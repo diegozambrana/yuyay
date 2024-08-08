@@ -12,11 +12,11 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 logger.info('PyStats API is starting up')
 
 router = APIRouter(
-    prefix="/api/yahoo_finance",
-    tags=["yahoo finance reader"],
+    prefix="/api/nixtla",
+    tags=["Nixtla API tests"],
 )
 
-@router.post("/load_csv")
+@router.post("/load_msft_csv")
 async def load_csv_yahoo_finance(file: UploadFile = File(...)):
     csvReader = csv.DictReader(codecs.iterdecode(file.file, 'utf-8'))
     df_csv = load_csv_to_pandas(csvReader)

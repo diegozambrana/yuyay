@@ -6,7 +6,7 @@ import logging
 import sys
 import pandas as pd
 
-from nixtlats import TimeGPT
+from nixtla import NixtlaClient
 from dotenv import load_dotenv, find_dotenv
 
 from .handlers import fill_missing_rows
@@ -20,7 +20,7 @@ _ = load_dotenv(find_dotenv())
 
 NIXTLA_API_KEY = os.environ['NIXTLA_API_KEY']
 
-timegpt = TimeGPT(token=NIXTLA_API_KEY)
+nixtla_client = NixtlaClient(api_key=NIXTLA_API_KEY)
 
 def forecast(data, time_col="date", val_col="count", horizon=30):
     """
@@ -32,7 +32,7 @@ def forecast(data, time_col="date", val_col="count", horizon=30):
     logger.info(data[0])
     df = pd.DataFrame(data)
     df = fill_missing_rows(df)
-    forecast_df = timegpt.forecast(df=df, h=horizon, time_col=time_col, target_col=val_col)
+    forecast_df = nixtla_client.forecast(df=df, h=horizon, time_col=time_col, target_col=val_col)
     forecast_df.columns = ['date', 'count']
     forecast_data = json.loads(forecast_df.to_json(orient='records'))
     return forecast_data

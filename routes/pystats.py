@@ -3,16 +3,8 @@ import sys
 
 from fastapi import APIRouter, HTTPException
 
-from api.utils.github import (
-    get_repo_data,
-    get_repo_stargazers_history,
-    get_repo_stargazers_history_complete,
-    get_organization_data,
-    get_organization_stargazers_history_complete,
-)
-from api.utils.handlers import get_repo_format, get_organization_format
-from api.utils.nixtla import forecast
-from api.utils.pystats import get_downloads_data
+from utils.nixtla import forecast
+from utils.pystats import get_downloads_data
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -26,7 +18,7 @@ router = APIRouter(
 
 
 @router.get("/packages")
-async def get_package_data(query: str):
+async def get_package_data(query: str | None = None):
     """
     Get the data of a python package from pypi
     """

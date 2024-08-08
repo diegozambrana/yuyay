@@ -3,15 +3,15 @@ import sys
 
 from fastapi import APIRouter, HTTPException
 
-from ..utils.github import (
+from utils.github import (
     get_repo_data,
     get_repo_stargazers_history,
     get_repo_stargazers_history_complete,
     get_organization_data,
     get_organization_stargazers_history_complete,
 )
-from ..utils.handlers import get_repo_format, get_organization_format
-from ..utils.nixtla import forecast
+from utils.handlers import get_repo_format, get_organization_format
+from utils.nixtla import forecast
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
