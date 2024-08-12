@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from routes import github
 from routes import pystats
-from routes import yahoo_finance
+from routes import github, pystats, yahoo_finance
 
 
 app = FastAPI()
