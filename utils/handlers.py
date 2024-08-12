@@ -1,6 +1,12 @@
 import csv
 import json
 import pandas as pd
+import logging
+import sys
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
 def get_repo_format(response):
     return {
