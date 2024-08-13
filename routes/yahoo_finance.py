@@ -6,8 +6,8 @@ import codecs
 from fastapi import APIRouter, HTTPException, File, UploadFile
 from utils.handlers import load_csv_to_pandas
 from utils.nixtla import forecast
-import yfinance as yf
 from datetime import datetime
+from core.yahoo_finance_service import get_or_create_yahoo_finance
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -25,15 +25,8 @@ async def get_yahoo_finance(symbol: str = 'BTC-USD', start_date: str = '2023-01-
     Get the historical data from Yahoo Finance and return the data with the forecast.
     """
     try:
-        # current_date = datetime.now().strftime("%Y-%m-%d")
-        data = yf.download(symbol, start=start_date, end=end_date)
-        data.reset_index(inplace=True)
-        prediction = forecast(data, time_col="Date", val_col="Close", horizon=7)
-        return {
-            'count': len(data),
-            'data': data.to_dict(orient='records'),
-            'forecast': prediction
-        }
+        data = get_or_create_yahoo_finance(symbol, start_date, end_date)
+        return data
     except Exception as e:
         logger.error(f"Error: {e}")
         raise HTTPException(status_code=400, detail="Error getting data from Yahoo Finance")

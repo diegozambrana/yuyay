@@ -1,5 +1,6 @@
 import os
 from supabase import create_client, Client
+from dotenv import load_dotenv, find_dotenv
 
 import logging
 import sys
@@ -18,4 +19,4 @@ logger.info(SUPABASE_URL)
 logger.info('~~~~~~~SUPABASE_KEY')
 logger.info(SUPABASE_KEY)
 
-supabase: Client = create_client(url, key)
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
