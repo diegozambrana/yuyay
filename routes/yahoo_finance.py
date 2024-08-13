@@ -20,18 +20,18 @@ router = APIRouter(
 )
 
 @router.get("/")
-async def get_yahoo_finance(symbol: str = 'BTC-USD'):
+async def get_yahoo_finance(symbol: str = 'BTC-USD', start_date: str = '2023-01-01', end_date: str = datetime.now().strftime("%Y-%m-%d")):
     """
     Get the historical data from Yahoo Finance and return the data with the forecast.
     """
     try:
-        current_date = datetime.now().strftime("%Y-%m-%d")
-        data = yf.download(symbol, start='2020-01-01', end=current_date)
+        # current_date = datetime.now().strftime("%Y-%m-%d")
+        data = yf.download(symbol, start=start_date, end=end_date)
         data.reset_index(inplace=True)
         prediction = forecast(data, time_col="Date", val_col="Close", horizon=7)
         return {
             'count': len(data),
-            'data': data[['Date', 'Close']].to_dict(orient='records'),
+            'data': data.to_dict(orient='records'),
             'forecast': prediction
         }
     except Exception as e:
