@@ -20,6 +20,7 @@ def get_yahoo_finance(symbol: str = 'BTC-USD', start_date: str = '2023-01-01', e
     prediction = forecast(data, time_col="Date", val_col="Close", horizon=7)
 
     return {
+        'symbol': symbol,
         'count': len(data),
         'data': data.to_dict(orient='records'),
         'forecast': prediction
@@ -55,6 +56,7 @@ def get_or_create_yahoo_finance(symbol: str, start_date: str = '2023-01-01', end
             return data
         else:
             return {
+                'symbol': symbol,
                 'count': len(response.data[0]['data']),
                 'data': response.data[0]['data'],
                 'forecast': response.data[0]['prediction']
