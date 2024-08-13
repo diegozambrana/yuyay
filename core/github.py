@@ -7,14 +7,14 @@ import sys
 
 from dotenv import load_dotenv, find_dotenv
 
-from .counter import get_values_list_pages
-from .mongo import (
+from utils.counter import get_values_list_pages
+from db.mongo import (
     get_repo_data_from_db,
     insert_repo_data_to_db,
     insert_org_data_to_db,
     get_org_data_from_db,
 )
-from .handlers import (
+from utils.handlers import (
     get_diff_stargazers_by_date,
     handle_repo_stargazers_history_complete,
     fill_missing_rows_from_list,

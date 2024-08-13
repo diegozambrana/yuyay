@@ -1,6 +1,6 @@
 import json
 import pypistats
-from .mongo import get_pystats_data_from_db, insert_pystats_data_to_db
+from db.mongo import get_pystats_data_from_db, insert_pystats_data_to_db
 
 
 def get_downloads_data(package_name):

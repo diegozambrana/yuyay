@@ -4,7 +4,7 @@ import sys
 from fastapi import APIRouter, HTTPException
 
 from utils.nixtla import forecast
-from utils.pystats import get_downloads_data
+from core.pystats import get_downloads_data
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

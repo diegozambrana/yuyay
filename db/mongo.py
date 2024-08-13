@@ -13,8 +13,6 @@ logger.info('GitHub API is starting up')
 _ = load_dotenv(find_dotenv())
 
 MONGODB_ACCESS_URL = os.environ['MONGODB_ACCESS_URL']
-logger.info('~~~~~~~MONGODB_ACCESS_URL')
-logger.info(MONGODB_ACCESS_URL)
 
 
 def insert_repo_data_to_db(repo, data):

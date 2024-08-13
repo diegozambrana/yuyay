@@ -3,7 +3,7 @@ import sys
 
 from fastapi import APIRouter, HTTPException
 
-from utils.github import (
+from core.github import (
     get_repo_data,
     get_repo_stargazers_history,
     get_repo_stargazers_history_complete,
