@@ -3,6 +3,7 @@ nixtla==0.5.1
 pymongo==4.6.1
 pypistats==1.5.0
 python-dotenv==1.0.1
+python-multipart==0.0.6
 requests==2.31.0
 uvicorn==0.27.0.post1
 yfinance==0.2.41
