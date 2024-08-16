@@ -51,7 +51,7 @@ def get_or_create_yahoo_finance(symbol: str, start_date: str = '2023-01-01', end
             # update the data in the database
             update_yahoo_finance(symbol, {
                 'data': data['data'],
-                'prediction': data['forecast']
+                'prediction': data['forecast'],
             })
             return data
         else:
