@@ -45,19 +45,24 @@ def get_or_create_yahoo_finance(symbol: str, start_date: str = '2023-01-01', end
         })
         return data
     else:
+        res_data = {
+            'symbol': symbol,
+            'count': len(response.data[0]['data']),
+            'data': response.data[0]['data'],
+            'forecast': response.data[0]['prediction'],
+        }
         if not response.data[0]['updated_at'].startswith(end_date):
-            data = get_yahoo_finance(symbol, start_date, end_date)
+            try:
+                data = get_yahoo_finance(symbol, start_date, end_date)
 
-            # update the data in the database
-            update_yahoo_finance(symbol, {
-                'data': data['data'],
-                'prediction': data['forecast'],
-            })
-            return data
-        else:
-            return {
-                'symbol': symbol,
-                'count': len(response.data[0]['data']),
-                'data': response.data[0]['data'],
-                'forecast': response.data[0]['prediction']
-            }
+                # update the data in the database
+                update_yahoo_finance(symbol, {
+                    'data': data['data'],
+                    'prediction': data['forecast'],
+                })
+                return data
+            except Exception as e:
+                logger.error(f"Error: {e}")
+                return {**res_data, 'error': str(e)}
+        # else:
+        return res_data
