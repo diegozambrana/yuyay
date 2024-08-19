@@ -18,6 +18,7 @@ def insert_repo_data_to_db(repo, data, forecast):
         'owner': repo['owner']['login'],
         'full_name': repo['full_name'],
         'stargazers_count': repo['stargazers_count'],
+        'name': repo['name'],
         'data': data,
         'prediction': forecast
     }).execute()
