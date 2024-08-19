@@ -32,8 +32,7 @@ def forecast(data, time_col="date", val_col="count", horizon=30, **kwargs):
     
     if isinstance(data, pd.DataFrame):
         df = data.copy()
-    else:
-        logger.info(data[0])
+    else:        
         df = pd.DataFrame(data)
     df = fill_missing_rows(df, field=time_col)
     forecast_df = nixtla_client.forecast(df=df, h=horizon, time_col=time_col, target_col=val_col, **kwargs)

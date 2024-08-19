@@ -7,8 +7,9 @@ import sys
 
 from dotenv import load_dotenv, find_dotenv
 
+from utils.nixtla import forecast
 from utils.counter import get_values_list_pages
-from db.mongo import (
+from db.github_data import (
     get_repo_data_from_db,
     insert_repo_data_to_db,
     insert_org_data_to_db,
@@ -121,19 +122,14 @@ def get_repo_stargazers_history(owner, repo_name, repository_data, iterations = 
     return result
 
 
-def get_repo_stargazers_history_complete(repository_data):
-    """
-    Get repository stargazers history from GitHub API complete when the total of
-    stargazers is less than 40000
-    """
+def get_repo_stargazers_history_complete_data(repository_data):
     total_stargazers = repository_data['stargazers_count']
 
-    data = get_repo_data_from_db(repository_data)
-    logger.info(f'~~~{repository_data["full_name"]} - {total_stargazers}')
+    response = get_repo_data_from_db(repository_data)
 
-    if data:
+    if len(response.data) > 0:
         # if data exists in db return it
-        return data['data']
+        return response.data[0]
     else:
         # if data does not exist in db, get it from GitHub API
         print('No data in db')
@@ -154,10 +150,49 @@ def get_repo_stargazers_history_complete(repository_data):
         if  total_stargazers > 0:
             result_data = fill_missing_rows_from_list(result_data)
 
-        # Insert data to MongoDB
-        insert_repo_data_to_db(repository_data, result_data)
-
         return result_data
+
+
+def get_repo_stargazers_history_complete(repository_data):
+    """
+    Get repository stargazers history from GitHub API complete when the total of
+    stargazers is less than 40000
+    """
+    total_stargazers = repository_data['stargazers_count']
+
+    response = get_repo_data_from_db(repository_data)
+
+    if len(response.data) > 0:
+        # if data exists in db return it
+        return response.data[0]
+    else:
+        # if data does not exist in db, get it from GitHub API
+        print('No data in db')
+        n_pages = total_stargazers // 100 
+        if total_stargazers % 100 != 0:
+            n_pages += 1
+
+        result = []
+        
+        # Get stargazers history for each page
+        for page in range(1, n_pages + 1):
+            stars_data = get_repo_star_history_per_page_complete(repository_data, page=page, per_page=100)
+            result = result + [s['starred_at'] for s in stars_data]
+        
+        # Group by date and sum the stargazers
+        result_data = handle_repo_stargazers_history_complete(result)
+        result_data = json.loads(result_data)
+        if  total_stargazers > 0:
+            result_data = fill_missing_rows_from_list(result_data)
+
+        predictions = forecast(result_data)
+
+        insert_repo_data_to_db(repository_data, result_data, predictions)
+
+        return {
+            "data": result_data,
+            "prediction": predictions
+        }
 
 
 def get_repos_from_organization(org, page=1, per_page=100):
@@ -185,11 +220,11 @@ def get_organization_stargazers_history_complete(organization_name):
     org = response_org.json()
     total_repos = org['public_repos']
 
-    data = get_org_data_from_db(org)
+    response = get_org_data_from_db(org)
 
-    if data:
+    if len(response.data) > 0:
         # if data exists in db return it
-        return data['data']
+        return response.data[0]
 
     else:
         # if data does not exist in db, get it from GitHub API
@@ -209,7 +244,7 @@ def get_organization_stargazers_history_complete(organization_name):
 
         # Get stargazers history for each repository
         for repo in total_repos:
-            repo_data = get_repo_stargazers_history_complete(repo)
+            repo_data = get_repo_stargazers_history_complete_data(repo)
             repo_data = get_diff_stargazers_by_date(repo_data)
             result = result + repo_data
 
@@ -220,10 +255,16 @@ def get_organization_stargazers_history_complete(organization_name):
         df['total'] = df['value'].cumsum()
         df = df[['date', 'total']]
         df.columns = ['date', 'count']
+        
         result_data = df.to_json(orient='records')
         result_data = json.loads(result_data)
+        
+        predictions = forecast(result_data)
 
         # Insert data to MongoDB
-        insert_org_data_to_db(org, result_data)
+        insert_org_data_to_db(org, result_data, predictions)
 
-        return result_data
+        return {
+            "data": result_data,
+            "prediction": predictions
+        }

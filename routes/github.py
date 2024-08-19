@@ -11,7 +11,6 @@ from core.github import (
     get_organization_stargazers_history_complete,
 )
 from utils.handlers import get_repo_format, get_organization_format
-from utils.nixtla import forecast
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -29,7 +28,7 @@ async def read_repositories(query: str):
     Get repositories by owner and name
     return list of repositories success if found and fails if not found
     """
-    if query is None:
+    if query  == "":
         raise HTTPException(status_code=404, detail="Repository not found")
 
     d = [(q.split('/')[0], q.split('/')[1]) for q in query.split(',')]
@@ -43,7 +42,6 @@ async def read_repositories(query: str):
             fails.append(f"{owner}/{repo_name}")
 
         repo = get_repo_data(owner, repo_name)
-        logger.info(type(repo))
         
         if repo is None:
             fails.append(f"{owner}/{repo_name}")
@@ -61,7 +59,7 @@ def read_organization(query: str):
     """
     Get organization by list of organization names
     """
-    if query is None:
+    if query == "":
         raise HTTPException(status_code=404, detail="organizations not found")
     
     d = query.split(',')
@@ -92,7 +90,7 @@ def read_owner_repositories(name: str):
     """
     Get repositories by owner
     """
-    if name is None:
+    if name == "":
         raise HTTPException(status_code=404, detail="organization not found")
 
     org = get_organization_data(name)
@@ -107,7 +105,7 @@ def read_owner_repositories(name: str):
     """
     Get repositories by owner
     """
-    if name is None:
+    if name == "":
         raise HTTPException(status_code=404, detail="organization not found")
 
     org = get_organization_data(name)
@@ -117,12 +115,10 @@ def read_owner_repositories(name: str):
     
     data = get_organization_stargazers_history_complete(org.get('login'))
 
-    predictions = forecast(data)
-
     return {
-        'count': len(data),
-        'data': data,
-        'forecast': predictions
+        'count': len(data['data']),
+        'data': data['data'],
+        'forecast': data['prediction']
     }
 
 
@@ -131,7 +127,7 @@ async def read_repository(owner: str, repo_name: str):
     """
     Get repository by owner and name
     """
-    if owner is None or repo_name is None:
+    if owner == "" or repo_name == "":
         raise HTTPException(status_code=404, detail="Repository not found")
 
     repo = get_repo_data(owner, repo_name)
@@ -145,7 +141,7 @@ def read_stargazers(owner: str, repo_name: str):
     """
     Get stargazers by owner and name
     """
-    if owner is None or repo_name is None:
+    if owner == "" or repo_name == "":
         raise HTTPException(status_code=404, detail="Repository not found")
 
     repo = get_repo_data(owner, repo_name)
@@ -159,13 +155,8 @@ def read_stargazers(owner: str, repo_name: str):
     else:
         data = get_repo_stargazers_history(owner, repo_name, repo)
 
-    predictions = forecast(data)
-
-    if repo is None:
-        raise HTTPException(status_code=404, detail="Repository not found")
-
     return {
-        'count': len(data),
-        'data': data,
-        'forecast': predictions
+        'count': len(data['data']),
+        'data': data['data'],
+        'forecast': data['prediction']
     }
