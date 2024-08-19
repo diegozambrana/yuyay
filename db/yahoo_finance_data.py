@@ -15,8 +15,7 @@ def get_by_symbol(symbol: str):
     """
     logger.info('Get Yahoo Finance data by symbol')
     logger.info(f"Symbol: {symbol}")
-    response = supabase.table('yahoo_finance_data').select('*').execute()
-    logger.info(f"Response: {response}")
+    response = supabase.table('yahoo_finance_data').select('*').eq('symbol', symbol).execute()
     return response
 
 

@@ -64,5 +64,4 @@ def get_or_create_yahoo_finance(symbol: str, start_date: str = '2023-01-01', end
             except Exception as e:
                 logger.error(f"Error: {e}")
                 return {**res_data, 'error': str(e)}
-        # else:
         return res_data
