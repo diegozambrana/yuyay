@@ -7,7 +7,7 @@ from db.supabase import supabase
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler(sys.stdout))
-logger.info('PyStats API is starting up')
+logger.info('----> GITHUB API is starting up')
 
 
 def insert_repo_data_to_db(repo, data, forecast):
@@ -107,4 +107,22 @@ def update_pystats_data_to_db(name, data, forecast):
         'data': data,
         'prediction': forecast
     }).eq('name', name).execute()
+    return response
+
+
+def get_last_organizations():
+    """
+    Get last 10 organizations from Supabase
+    """
+    logger.info('Get last 10 organizations from Supabase')
+    response = supabase.table('github_organization_star').select('id, name').order('updated_at', desc=True).limit(10).execute()
+    logger.info(response)
+    return response
+
+
+def get_last_repositories():
+    """
+    Get last 10 repositories from Supabase
+    """
+    response = supabase.table('github_repository_star').select('id, name, full_name').order('updated_at', desc=True).limit(10).execute()
     return response

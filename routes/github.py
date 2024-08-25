@@ -10,6 +10,7 @@ from core.github import (
     get_organization_data,
     get_organization_stargazers_history_complete,
 )
+from db.github_data import get_last_organizations, get_last_repositories
 from utils.handlers import get_repo_format, get_organization_format
 
 logger = logging.getLogger(__name__)
@@ -21,6 +22,26 @@ router = APIRouter(
     prefix="/api/github",
     tags=["github"],
 )
+
+### LATEST SEARCH ###
+
+@router.get("/latest_search/organizations")
+async def read_latest_search_organizations():
+    """
+    Get latest search organizations
+    """
+    response = get_last_organizations()
+    return response.data
+
+@router.get("/latest_search/repositories")
+async def read_latest_search_repositories():
+    """
+    Get latest search repositories
+    """
+    response = get_last_repositories()
+    return response.data
+
+## REPOSITORIES ##
 
 @router.get("/get_repositories")
 async def read_repositories(query: str):
@@ -160,3 +181,4 @@ def read_stargazers(owner: str, repo_name: str):
         'data': data['data'],
         'forecast': data['prediction']
     }
+
