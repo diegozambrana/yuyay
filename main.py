@@ -1,9 +1,7 @@
 from typing import Union
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
-from routes import github
-from routes import pystats
-from routes import github, pystats, yahoo_finance
+from routes import github, pystats, yahoo_finance, tracker
 
 
 app = FastAPI()
@@ -22,3 +20,4 @@ app.add_middleware(
 app.include_router(yahoo_finance.router)
 app.include_router(github.router)
 app.include_router(pystats.router)
+app.include_router(tracker.router)
