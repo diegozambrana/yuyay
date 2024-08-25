@@ -3,6 +3,7 @@ import sys
 import csv
 import codecs
 
+from db.yahoo_finance_data import get_latest_data
 from fastapi import APIRouter, HTTPException, File, UploadFile
 from utils.handlers import load_csv_to_pandas
 from utils.nixtla import forecast
@@ -46,3 +47,12 @@ async def load_csv_yahoo_finance(file: UploadFile = File(...)):
         'data': df_csv[['Date', 'Close']].to_dict(orient='records'),
         'forecast': prediction
     }
+
+
+@router.get("/latest")
+async def get_latest_yahoo_finance():
+    """
+    Get the latest Yahoo Finance data from the database.
+    """
+    response = get_latest_data()
+    return response.data

@@ -114,9 +114,7 @@ def get_last_organizations():
     """
     Get last 10 organizations from Supabase
     """
-    logger.info('Get last 10 organizations from Supabase')
     response = supabase.table('github_organization_star').select('id, name').order('updated_at', desc=True).limit(10).execute()
-    logger.info(response)
     return response
 
 

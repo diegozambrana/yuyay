@@ -32,3 +32,10 @@ def update_yahoo_finance(symbol: str, data: dict):
     """
     response = supabase.table("yahoo_finance_data").update(data).eq('symbol', symbol).execute()
     return response
+
+def get_latest_data():
+    """
+    Get the latest Yahoo Finance data from the database.
+    """
+    response = supabase.table('yahoo_finance_data').select('id, symbol, name').order('updated_at', desc=True).limit(10).execute()
+    return response
