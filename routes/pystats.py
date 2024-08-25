@@ -37,12 +37,10 @@ async def get_package_data(query: str | None = None):
         if data is None:
             fails.append(package_name)
         else:
-            prediction = forecast(data)
-
             success.append({
                 'name': package_name,
-                'data': data,
-                'forecast': prediction,
+                'data': data['data'],
+                'forecast': data['prediction'],
             })
 
     data = {
@@ -58,7 +56,7 @@ async def get_package_data(package_name: str):
     """
     Get the data of a python package from pypi
     """
-    if package_name is None:
+    if package_name == "":
         raise HTTPException(status_code=404, detail="Package not found")
 
     data = get_downloads_data(package_name)
@@ -66,10 +64,8 @@ async def get_package_data(package_name: str):
     if data is None:
         raise HTTPException(status_code=404, detail="Package not found")
 
-    prediction = forecast(data)
-
     return {
         'name': package_name,
-        'data': data,
-        'forecast': prediction,
+        'data': data['data'],
+        'forecast': data['prediction'],
     }
