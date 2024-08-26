@@ -46,7 +46,7 @@ async def fetch_tracker_details_by_code(code: str):
     """
     try:
         response = get_tracker_details_by_code(code)
-        return response.data
+        return response.data[0]
     except Exception as e:
         return HTTPException(status_code=404, detail="Tracker details not found")
 
@@ -57,13 +57,17 @@ async def create_tracker_details(data: dict):
     Get all tracker details
     payload:
     {
-        "code": "TEST",
+        "name": "test",
         "description": "",
         "details": [{"type": "string", "field": "test_1", "label": "Test 1"}, ...]
     }
     """
-    response = insert_tracker_details_data(data)
-    return response.data
+    try:
+        data['code'] = data['name'].lower().replace(" ", "-")
+        response = insert_tracker_details_data(data)
+        return response.data
+    except Exception as e:
+        return HTTPException(status_code=401, detail="Issue creating tracker details")
 
 
 @router.put("/trackers/{code}")
