@@ -12,7 +12,8 @@ from db.tracker_data import (
     get_tracker_details_by_code,
     get_tracker_details_data,
     insert_tracker_details_data,
-    update_tracker_details_data
+    update_tracker_details_data,
+    get_tracking_list_by_tracker_details_id
 )
 
 logger = logging.getLogger(__name__)
@@ -47,6 +48,18 @@ async def fetch_tracker_details_by_code(code: str):
     try:
         response = get_tracker_details_by_code(code)
         return response.data[0]
+    except Exception as e:
+        return HTTPException(status_code=404, detail="Tracker details not found")
+    
+
+@router.get("/trackers/{tracker_details_id}/tracks")
+async def fetch_tracker_details_by_tracker_details_id(tracker_details_id: str):
+    """
+    Get all tracker details by tracker_details_id
+    """
+    try:
+        response = get_tracking_list_by_tracker_details_id(tracker_details_id)
+        return response.data
     except Exception as e:
         return HTTPException(status_code=404, detail="Tracker details not found")
 

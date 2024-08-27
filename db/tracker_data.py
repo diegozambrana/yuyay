@@ -11,6 +11,14 @@ logger.info('Tracker DB')
 
 # TRACKER
 
+def get_tracking_list_by_tracker_details_id(tracker_details_id):
+    """
+    Get all tracker data from Supabase
+    """
+    response = supabase.table('tracker').select('*').eq('tracker_details_id', tracker_details_id).execute()
+    return response
+
+
 def insert_tracker_data(data):
     """
     Insert tracker data to Supabase
