@@ -130,8 +130,8 @@ async def update_tracking(tracking_id: str, data: dict):
     """
     try:
         logger.info(f"update_tracking: {tracking_id}")
-        update_tracker_data(tracking_id, {"data": data})
-        return {"message": "Tracking updated"}
+        res = update_tracker_data(tracking_id, {"data": data})
+        return res.data[0]
     except Exception as e:
         return HTTPException(status_code=404, detail="Tracker details not found")
 
