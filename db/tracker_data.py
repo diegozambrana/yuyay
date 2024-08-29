@@ -15,7 +15,7 @@ def get_tracking_list_by_tracker_details_id(tracker_details_id):
     """
     Get all tracker data from Supabase
     """
-    response = supabase.table('tracker').select('*').eq('tracker_details_id', tracker_details_id).execute()
+    response = supabase.table('tracker').select('*').eq('tracker_details_id', tracker_details_id).order("started_at", desc=True).execute()
     return response
 
 
