@@ -13,6 +13,7 @@ from db.tracker_data import (
     get_tracker_details_data,
     insert_tracker_details_data,
     update_tracker_details_data,
+    delete_tracker_details_data,
     get_tracking_list_by_tracker_details_id
 )
 
@@ -50,7 +51,19 @@ async def fetch_tracker_details_by_code(code: str):
         return response.data[0]
     except Exception as e:
         return HTTPException(status_code=404, detail="Tracker details not found")
-    
+
+
+@router.delete("/trackers/{tracker_details_id}")
+async def delete_tracker_details(tracker_details_id: str):
+    """
+    DELETE tracker details by tracker_details_id
+    """
+    try:
+        response = delete_tracker_details_data(tracker_details_id)
+        return response.data
+    except Exception as e:
+        return HTTPException(status_code=404, detail="Tracker details not found")
+
 
 @router.get("/trackers/{tracker_details_id}/tracks")
 async def fetch_tracker_details_by_tracker_details_id(tracker_details_id: str):

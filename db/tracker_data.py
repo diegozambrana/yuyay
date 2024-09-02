@@ -80,3 +80,11 @@ def insert_tracker_details_data(data):
     """
     response = supabase.table('tracker_details').insert(data).execute()
     return response
+
+
+def delete_tracker_details_data(tracker_details_id):
+    """
+    Delete tracker details data from Supabase
+    """
+    response = supabase.table('tracker_details').delete().eq('id', tracker_details_id).execute()
+    return response
