@@ -129,6 +129,7 @@ async def update_tracking(tracking_id: str, data: dict):
     update tracking data based in details from tracker_details table
     """
     try:
+        logger.info(f"update_tracking: {tracking_id}")
         res = update_tracker_data(tracking_id, data)
         return res.data[0]
     except Exception as e:
