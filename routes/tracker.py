@@ -96,18 +96,19 @@ async def create_tracker_details(data: dict):
         return HTTPException(status_code=401, detail="Issue creating tracker details")
 
 
-@router.put("/trackers/{code}")
-async def update_tracker_details(code: str, data: dict):
+@router.put("/trackers/{tracker_detail_id}")
+async def update_tracker_details(tracker_detail_id: str, data: dict):
     """
     update tracker details
     payload:
     {
+        "name": "",
         "description": "",
         "details": [{"type": "string", "field": "test_1", "label": "Test 1"}, ...]
     }
     """
     try:
-        response = update_tracker_details_data(code, data)
+        response = update_tracker_details_data(tracker_detail_id, data)
         return response.data
     except Exception as e:
         return HTTPException(status_code=404, detail="Tracker details not found")

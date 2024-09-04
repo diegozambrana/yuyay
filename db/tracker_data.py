@@ -66,11 +66,11 @@ def get_tracker_details_by_code(code):
     return response
 
 
-def update_tracker_details_data(code, data):
+def update_tracker_details_data(id, data):
     """
     Update tracker details data from Supabase
     """
-    response = supabase.table('tracker_details').update(data).eq('code', code).execute()
+    response = supabase.table('tracker_details').update(data).eq('id', id).execute()
     return response
 
 
