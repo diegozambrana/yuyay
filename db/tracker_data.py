@@ -54,7 +54,7 @@ def get_tracker_details_data():
     """
     Get all tracker details data from Supabase
     """
-    response = supabase.table('tracker_details').select('id, name, code, description').execute()
+    response = supabase.table('tracker_details').select('*').execute()
     return response
 
 
